@@ -57,45 +57,20 @@ int main(int argc, char* argv[])
   // Turning Off-screen rendering to True removes the bug
   //window->SetOffScreenRendering( True ); 
   window->SetSize(640, 480);
-
+  //window->SetMultiSamples(8);
+  renderer->SetBackground(0,1,0);
   window->AddRenderer(renderer);
   vtkCamera* camera = renderer->GetActiveCamera();
-  camera->SetPosition(0., 0., 0.);
-  camera->SetFocalPoint(0., 0., 1.);  // Sets z-forward.
-  camera->SetViewUp(0., -1, 0.);  // Sets y-down.
   // Changing the angle ever so slightly removes the bug: bug appears
   // with 43,44,45,46, but not with 30 or 47.
   camera->SetViewAngle(45);
-
-  vtkSmartPointer<vtkMatrix4x4> vtk_mat = vtkSmartPointer<vtkMatrix4x4>::New();
-  vtk_mat->SetElement(0, 0, 0);
-  vtk_mat->SetElement(0, 1, -1.0f);
-  vtk_mat->SetElement(0, 2, 0);
-  vtk_mat->SetElement(0, 3, 0);
-  vtk_mat->SetElement(1, 0, -1.0f);
-  vtk_mat->SetElement(1, 1, 0);
-  vtk_mat->SetElement(1, 2, 0);
-  vtk_mat->SetElement(1, 3, 0);
-  vtk_mat->SetElement(2, 0, 0);
-  vtk_mat->SetElement(2, 1, 0);
-  vtk_mat->SetElement(2, 2, -1.0f);
-  vtk_mat->SetElement(2, 3, 0.49999);// .9 works, .85 fails, anything above works?
-  vtk_mat->SetElement(3, 0, 0);
-  vtk_mat->SetElement(3, 1, 0);
-  vtk_mat->SetElement(3, 2, 0);
-  vtk_mat->SetElement(3, 3, 1);
-
-  vtkSmartPointer<vtkTransform> vtk_transform = vtkSmartPointer<vtkTransform>::New();
-  vtk_transform->SetMatrix(vtk_mat);
-  camera->ApplyTransform(vtk_transform);
+  camera->SetClippingRange(0.1,1.0);
   
   vtkSmartPointer<vtkPlaneSource> plane = vtkSmartPointer<vtkPlaneSource>::New();
   const double half_size = 50.;
-  plane->SetOrigin(-half_size, -half_size, 0.);
-  plane->SetPoint1(-half_size, half_size, 0.);
-  plane->SetPoint2(half_size, -half_size, 0.);
-  plane->SetNormal(0., 0., 1.);
-  plane->Update();
+  plane->SetOrigin(-half_size, -half_size, 0.4);
+  plane->SetPoint1(half_size, -half_size, 0.4);
+  plane->SetPoint2(-half_size, half_size, 0.4);
 
   // For color and label.
   vtkSmartPointer<vtkPolyDataMapper> mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
@@ -107,7 +82,6 @@ int main(int argc, char* argv[])
   terrain_actor_->GetProperty()->LightingOff();
 
   renderer->AddActor(terrain_actor_);
-  renderer->SetBackground(0, 0, 0);
   
   vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor =
   vtkSmartPointer<vtkRenderWindowInteractor>::New();

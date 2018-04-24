@@ -3,6 +3,9 @@
 Description
 -----------
 
+**Background color bleeds through plane. The bug is only visible if multisampling is
+used and set to 8. Most likely due to a subpixel not being rendered correctly.**
+
 **This bug only seem to happen on Linux (tested on Ubuntu 16.04) with an NVidia graphics
 card (tested on Quadro M1000M). It was reproduced on a different computer with a different
 NVidia graphics card (unknown) also on Ubuntu 16.04. It happens with several drivers (maybe all),
@@ -11,8 +14,8 @@ card is turned off and the Intel graphics card is used. It also does not appear 
 or MacOS with NVidia graphics cards.**
 
 This repository contains a small example to reproduce a strange behavior: The center pixel
-has a slightly different color than all the other pixels of the image, even though one
-would expect the generated image to be uniform.
+has a slightly different color (altered by the background color) than all the other pixels
+of the image, even though one would expect the generated image to be uniform.
 
 This can be mitigated by changing the window size to a size that does not generate this problem.
 Strangely enough, there does not seem to be any consistency with this: A certain window size
